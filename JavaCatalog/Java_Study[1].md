@@ -629,6 +629,287 @@ public class zi extends  fu {
 > 重载（overload）：方法名称一样，参数列表不一样。
 >
 > 方法的覆盖重写特点：创建的是子类对象，则优先使用子类对象
+>
+> `注意事项：`
+>
+> :one: 、必须保证父子类之间方法的名称相同，参数列表也相同
+>
+> ​		@Override  写在方法前面。用来检测是不是有效的正确覆盖重写
+>
+> ​		这个注解就算不写，只要满足要求，也是正确的方法覆盖重写
+>
+> :two: 、子类方法的返回值必须【小于等于】父类的返回值范围
+>
+> ​	     Object类是所有类的公共最高父类
+>
+> :three: 、子类方法的权限必须【大于等于】父类方法的权限修饰符
+>
+> ​	`public >protected>(default)>private`
+>
+> default 不是关键字default  而是什么都不写，留空
+
+- newPhone类
+
+  ```
+  package day01;
+  
+  public class NewPhone extends  phone{
+      @Override
+      public void show() {
+          super.show();
+          System.out.println("显示头像");
+          System.out.println("显示姓名");
+      }
+  }
+  ```
+
+- phone类
+
+  ```java
+  package day01;
+  
+  public class phone {
+      public void send(){
+          System.out.println("发短信");
+      }
+      public void show(){
+          System.out.println("显示号码");
+      }
+      public void call(){
+          System.out.println("打电话");
+      }
+  }
+  
+  ```
+
+- main方法
+
+  ```java
+  package day01;
+  
+  public class demo01Override {
+      public static void main(String[] args) {
+          phone phone=new phone();
+          phone.send();
+          phone.show();
+          phone.call();
+          System.out.println("========");
+          NewPhone newPhone=new NewPhone();
+          newPhone.show();
+          newPhone.send();
+          newPhone.call();
+  /*发短信
+  显示号码
+  打电话
+  ========
+  显示号码
+  显示头像
+  显示姓名
+  发短信
+  打电话*/
+      }
+  
+  
+  }
+  
+  ```
+
+
+
+#### 继承中构造方法的访问特点
+
+> 1、子类构造方法当中有一个默认隐含的“super()”调用，所以一定是先调用父类构造，后执行子类构造
+>
+> 2、可以通过super关键字来子类构造调用父类重载构造
+>
+> 3、super的父类构造调用，必须是子类构造方法的第一个语句。不能一个子类构造调用多次super构造
+>
+> 总结：
+>
+> ​		子类必须调用父类构造方法，不写则赠送super()；写了则用写的指定的super调用，super只能有一个，必须是第一个。
+>
+> 
+
+- newPhone类
+
+  ```java
+  public class NewPhone extends  phone{
+      public NewPhone() {
+  //        super();  在调用父类无参构造方法
+          super(20);//调用父类重载的构造方法
+          System.out.println("子类构造方法");
+      }
+  }
+  ```
+
+- phone类
+
+  ```java
+  public class phone {
+      public phone() {
+          System.out.println("父类无参构造");
+      }
+      public phone(int num){
+          System.out.println("父类有参构造"+num);
+      }
+  
+  }
+  ```
+
+- main方法
+
+  ```java
+  public class demo01Override {
+      public static void main(String[] args) {
+          NewPhone newPhone=new NewPhone();
+  //                父类有参构造20
+  //                子类构造方法
+     
+      }
+  }
+  ```
+
+#### 继承的三个特点
+
+![](https://i.loli.net/2021/01/15/jGW6TBRNbZhAieD.png)
+
+### :clinking_glasses: 抽象方法和抽象类
+
+#### 抽象方法和抽象类的格式
+
+```java
+/*
+抽象方法：就是加上abstract 关键字，然后去掉大括号，直接分号结束
+抽象类： 抽象方法所在的类，必须是抽象类才行，在class之前加上abstract就行
+*/
+public abstract class Animal {
+//   这就是一个抽象方法，代表吃东西，但是具体吃什么，不确定
+    public abstract void eat();
+//    这是一个普通方法
+    public void normalMethod(){
+
+    }
+}
+```
+
+#### 抽象方法和抽象类的使用
+
+> 1、不能直接创建new 抽象类对象。
+>
+> 2、必须用一个子类来继承抽象类
+>
+> 3、子类必须覆盖重写父类当中所有的抽象方法
+>
+> 实现：  子类去掉抽象方法的abstract关键字，然后补上方法体大括号
+>
+> 4、创建子类对象进行使用
+
+- demoMain类
+
+  ```java
+  public class demoMain {
+      public static void main(String[] args) {
+  //        Animal animal=new Animal(); 错误写法，不能直接创建抽象类对象
+          cat cat=new cat();
+          cat.eat();
+      }
+  }
+  
+  ```
+
+- Animal类
+
+  ```java
+  public abstract class Animal {
+   public abstract void eat();
+  }
+  ```
+
+- cat类
+
+  ```java
+  public class cat extends Animal{
+      @Override
+      public void eat(){
+          System.out.println("猫吃鱼");
+      }
+  }
+  ```
+
+#### 抽象类和抽象方法的注意事项
+
+- 抽象类不能创建对象，如果创建，编译无法通过而报错，只能创建其非抽象子类的对象
+- 抽象类中，可以有构造方法，是供子类创建对象时，初始化父类成员使用的
+- 抽象类中，不一定包含抽象方法，但是有抽象方法的类必须是抽象类
+- 抽象类的子类，必须重写抽象父类中所有的抽象方法，否则，编译无法通过而报错。除非该子类也是抽象类
+
+- Animal类(爷爷辈)
+
+  ```java
+  public abstract class Animal {
+   public abstract void eat();
+   public abstract void sleep();
+  }
+  ```
+
+- Dog类(儿子辈)
+
+  ```java
+  //  Dog 也是一个抽象类了
+  public abstract  class Dog  extends Animal{
+      @Override
+      public void eat() {
+          System.out.println("吃骨头");
+      }
+  }
+  ```
+
+- Dog2ha类(孙子辈)
+
+  ```java
+  public class Dog2ha  extends Dog{
+      @Override
+      public void sleep() {
+          System.out.println("呼呼呼。。");
+      }
+  }
+  ```
+
+- main方法
+
+  ```java
+  public class demoMain {
+      public static void main(String[] args) {
+  //        Animal animal=new Animal(); 错误写法，不能直接创建抽象类对象
+  //       Dog dog=new Dog();错误写法
+          Dog2ha ha=new Dog2ha();
+          ha.eat();
+          ha.sleep();
+  //        吃骨头
+  //        呼呼呼。。
+      }
+  }
+  ```
+
+
+
+### :arrow_down_small: 接口
+
+>  接口就是一种<font color="red">公共的规范标准</font>
+
+#### 接口的定义基本格式
+
+> 接口就是多个类的公共规范
+>
+> 接口是一种引用数据结构，最重要的就是其中的<font color="red">抽象方法</font>
+>
+> 如何定义一个接口的格式：
+>
+> public interface 接口名称{
+>
+> ​			//接口内容	}
+>
+> 备注：换成关键字`interface` 之后，编译生成的字节码文件仍然是 .class文件
 
 
 
@@ -865,3 +1146,46 @@ public class Person {
 > 如果需要访问本类中的成员变量，需要使用this关键字
 >
 > this.成员变量名
+
+### super关键字
+
+> 1、在子类的成员方法中，访问父类的成员变量
+>
+> 2、在子类的成员方法中，访问父类的成员方法
+>
+> 3、在子类的构造方法中，访问父类的构造方法
+
+- Zi类
+
+  ```java
+  public class zi extends  fu {
+      int num=20;
+      public zi(){
+          super();// 构造方法
+      }
+      public void methodZi(){
+          super.method();// 访问父类的method
+          System.out.println(super.num);//访问父类的num
+      }
+  }
+  ```
+
+  
+
+- Fu类
+
+  ```java
+  public class fu {
+    int num=20;
+    public void method(){
+        System.out.println(num);
+    }
+  
+  }
+  ```
+
+  
+
+### this和super的关系
+
+![](https://i.loli.net/2021/01/15/HyFGnEWLx6swtrJ.png)
