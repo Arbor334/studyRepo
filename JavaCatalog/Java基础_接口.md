@@ -398,3 +398,141 @@ public interface MyInterfaceAbstract {
   - 静态私有方法：private static 返回值类型 方法名称(参数列表) {方法体}
   - 注意： private 的方法只有接口自己才能调用，不能被实现类或别人使用
 
+#### 继承父类并实现多个接口
+
+> ```java
+> 使用接口的时候，需要注意：
+> 1、接口还没有静态代码块或者构造方法的
+> 2、一个类的直接父类是唯一的，但是一个类可以同时实现多个接口
+> 格式：
+> public class MyInterfaceImpl implements MyInterface1,MyInterface2{
+> //  覆盖重写所有抽象方法
+> }
+> 3、如果实现类所实现的多个接口当中，存在重复的抽象方法，那么只需要覆盖重写一次即可
+> 4、如果实现类没有覆盖重写所有接口当中的所有抽象方法，那么实现类就必须是一个抽象类
+> 5、如果实现类所实现的多个接口当中，存在重复的默认方法，那么实现类一定要对冲突的默认方法进行覆盖重写
+> 6、一个类如果直接父类当中的方法，和接口当中的默认方法产生了冲突，优先使用父类中的方法
+> ```
+
+- demo06Interface 
+
+  ```JAVA
+  public class demo06Interface  {
+      public static void main(String[] args) {
+          Zi zi=new Zi();
+          zi.method();
+      }
+  }
+  ```
+
+- Zi
+
+  ```java
+  public class Zi extends Fu  implements MyInterface {
+  }
+  ```
+
+- Fu
+
+  ```java
+  public class Fu {
+      public void method(){
+          System.out.println("父类");
+      }
+  }
+  ```
+
+- MyInterface
+
+  ```java
+  public interface MyInterface {
+      public default void method(){
+          System.out.println("接口默认方法");
+      }
+  }
+  
+  ```
+
+
+
+#### 接口之间的多继承
+
+> ```java
+> 1、类与类之间是单继承的，直接父类只有一个
+> 2、类与接口之间是多实现的，一个类可以实现多个接口
+> 3、接口和接口之间是多继承的
+> 注意事项：
+> 1、多个父接口当中的抽象方法如果重复，没关系
+> 2、多个父接口当中的默认方法如果重复，那么子接口必须进行默认方法的覆盖重写，【而且带着default关键字】
+> ```
+
+
+
+- Myinterface接口 继承MyinterfaceA 接口和MyinterfaceB接口
+
+- MyinterfaceA
+
+  ```java
+  public interface MyinterfaceA {
+      public abstract void methodA();
+      public abstract void common();
+      public default void methodCommon(){
+          System.out.println("aaaa");
+      }
+  }
+  
+  ```
+
+- MyinterfaceB
+
+  ```java
+  public interface MyinterfaceB {
+      public abstract void methodB();
+      public abstract void common();
+      public default void methodCommon(){
+          System.out.println("bbbb");
+      }
+  }
+  ```
+
+- Myinterface
+
+  ```java
+  public interface MyInterface extends MyinterfaceA,MyinterfaceB{
+   public abstract void methodInterface();
+  
+      @Override
+      default void methodCommon() {
+          System.out.println("hhhhh");
+      }
+  }
+  
+  ```
+
+- MyinterfacImpl
+
+  ```java
+  public class MyInterfaceImpl implements MyInterface {
+      @Override
+      public void methodInterface() {
+  
+      }
+  
+      @Override
+      public void methodA() {
+  
+      }
+  
+      @Override
+      public void common() {
+  
+      }
+  
+      @Override
+      public void methodB() {
+  
+      }
+  }
+  ```
+
+  
