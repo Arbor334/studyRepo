@@ -55,7 +55,7 @@ public class User {
 
 ### 5、创建Spring配置文件，在配置文件配置创建的对象
 
-- (1) Spring 配置文件使用xml格式
+- (1) Spring 配置文件使用xml格式   （配置文件.xml放在src文件夹下）
 
 ![](https://i.loli.net/2021/01/14/wb4iH5npx7sqNGk.png)
 
@@ -385,7 +385,264 @@ public class User {
 
 
 
-#### ghh 
+#### IOC操作Bean管理(xml注入外部Bean)
+
+> （1）创建两个类 service类和dao类
+>
+> （2）在service调用dao里面的方法
+>
+> （3）在spring配置文件中进行配置
+
+- 1、创建UserDao接口
+
+  ```java
+  public interface UserDao {
+      public void update();
+  }
+  
+  ```
+
+- 2、创建UserDao接口的而实现类
+
+  ```java
+  public class UserDaoImpl implements UserDao{
+  
+      @Override
+      public void update() {
+          System.out.println("UserDao service ..");
+      }
+  }
+  ```
+
+- 3、创建UserService类
+
+  ```java
+  public class UserService {
+  //    创建UserDao类型属性，生成set方法
+      private  UserDao userDao;
+  
+      public void setUserDao(UserDao userDao) {
+          this.userDao = userDao;
+      }
+  
+      public void add(){
+          System.out.println("service add......");
+          userDao.update();
+  
+      }
+  }
+  ```
+
+- 4、配置文件
+
+  ```java
+  <!--1、service 和  dao 对象创建-->
+      <bean id="userService" class="com.atguigu.spring.service.UserService">
+          <!--注入userDao对象
+          name属性值：类里面的属性名称
+          ref属性：创建userDao对象bean标签id值 把外部bean加进来
+          -->
+          <property name="userDao" ref="userDao"> </property>
+      </bean>
+      <bean id="userDao" class="com.atguigu.spring.dao.UserDaoImpl"></bean>
+  
+  ```
+
+- 5、实现
+
+  ```java
+  public class TestBean {
+      @Test
+     public void testAdd(){
+  // 加载spring 配置文件
+          ApplicationContext context=new ClassPathXmlApplicationContext("bean2.xml");
+  //        获取配置创建的对象
+          UserService userService=context.getBean("userService",UserService.class);
+          userService.add();
+  //        service add......
+  //UserDao service ..
+     }
+  }
+  
+  ```
+
+
+
+#### IOC操作Bean管理(注入属性 -内部Bean和级联赋值）
+
+- 1、创建Emp类
+
+  ```java
+  
+  //员工类
+  public class Emp {
+      private String ename;
+      private String gender;
+  //    员工属于某一个部门，使用对象形式表示
+      private Dept dept;
+      public void setDept(Dept dept) {
+          this.dept = dept;
+      }
+  //在级联赋值的第二种方法的时候才需要这个方法
+      public Dept getDept() {
+          return dept;
+      }
+  
+      public void setEname(String ename) {
+          this.ename = ename;
+      }
+  
+      public void setGender(String gender) {
+          this.gender = gender;
+      }
+  
+      public void add(){
+          System.out.println(ename+" "+gender+" "+dept);
+      }
+  
+  }
+  
+  ```
+
+- 2、创建Dept类
+
+  ```java
+  //部门类
+  public class Dept {
+      private String dname;
+  
+      public void setDname(String dname) {
+          this.dname = dname;
+      }
+  
+      @Override
+      public String toString() {
+          return "Dept{" +
+                  "dname='" + dname + '\'' +
+                  '}';
+      }
+  }
+  
+  ```
+
+- 3、配置文件
+
+  > 在创建内部类的时候 ，一般的属性直接赋值，
+  >
+  > 其他的 对象属性，需要再创建一个新的bean 在property中  一个对象当做一个属性
+
+  ```java
+  <!--内部bean-->
+      <bean id="emp" class="com.atguigu.spring.bean.Emp">
+         <property name="ename" value="lucy"></property>
+         <property name="gender" value="girl"></property>
+          <property name="dept">
+              <bean id="dept" class="com.atguigu.spring.bean.Dept">
+                  <property name="dname" value="安保部"></property>
+              </bean>
+          </property>
+      </bean>
+  </beans>
+  ```
+
+- 4、测试
+
+  ```java
+  public class TestBean {
+      @Test
+     public void testAdd(){
+  // 加载spring 配置文件
+          ApplicationContext context=new ClassPathXmlApplicationContext("bean3.xml");
+  //        获取配置创建的对象
+          Emp emp=context.getBean("emp",Emp.class);
+          emp.add();
+  
+     }
+  }
+  ```
+
+- 级联赋值的配置 
+
+- > 使用的时候只需要修改 配置文件的名字就行  测试类和上面的一样
+
+  ```java
+  <!--级联赋值-->
+      <bean id="emp" class="com.atguigu.spring.bean.Emp">
+          <property name="ename" value="lucy"></property>
+          <property name="gender" value="女"></property>
+  <!--        级联赋值第一种写法
+       <property name="dept" ref="dept"></property>
+       <bean id="dept" class="com.atguigu.spring.bean.Dept">
+          <property name="dname" value="财务部"></property>
+      </bean>
+  
+      -->
+  
+          <property name="dept" ref="dept"></property>
+  
+  <!--        第二种写法  需要在emp的添加 dname的get方法-->
+          <property name="dept.dname" value="技术部" ></property>
+      </bean>
+      <bean id="dept" class="com.atguigu.spring.bean.Dept">
+          <property name="dname" value="财务部"></property>
+      </bean>
+  
+  </beans>
+  ```
+
+
+
+#### IOC操作 Bean管理（注入集合属性类型）
+
+-  1、注入数组类型属性
+
+- 2、注入List集合类型属性
+
+- 3、注入Map集合类型属性
+
+  - （1）、创建类，定义数组，list，map，set类型属性,生成对应的set方法
+
+    ```java
+    package com.atguigu.spring.collectiontype;
+    
+    import java.util.List;
+    import java.util.Map;
+    import java.util.Set;
+    
+    public class stu {
+    //    1、数组类型属性
+        private String[] classes;
+    
+        public void setClasses(String[] classes) {
+            this.classes = classes;
+        }
+    //    2、list集合类型属性
+        private List<String> list;
+    
+        public void setList(List<String> list) {
+            this.list = list;
+        }
+    //    3、map集合类型属性
+        private Map<String,String> maps;
+    
+        public void setMaps(Map<String, String> maps) {
+            this.maps = maps;
+        }
+    //    4、set集合类型属性
+        private Set<String> sets;
+    
+        public void setSets(Set<String> sets) {
+            this.sets = sets;
+        }
+    }
+    
+    ```
+
+  - （2）、在spring配置文件中进行配置
+
+  - 
+
+  - 
 
 
 
