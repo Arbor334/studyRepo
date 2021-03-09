@@ -16,16 +16,16 @@
 
 ## 2、入门案例
 
-### 1、下载Spring5最新稳定版本  `GA表示稳定版`  	`SNAPSHOT表示测试版`
+### :one:、下载Spring5最新稳定版本  `GA表示稳定版`  	`SNAPSHOT表示测试版`
 
 ![](https://i.loli.net/2021/01/05/ycj25gvUlLhFW9J.png)
 
-### 2、[下载地址](https://repo.spring.io/release/org/springframework/spring/)
+### :two:、[下载地址](https://repo.spring.io/release/org/springframework/spring/)
 
 - `找到最新的RELEASE下载  xxxxRELEASE-dist.zip解压就可以了`
 - ![](https://i.loli.net/2021/01/05/UOyb3H5Y72w6eqn.png)
 
-### 3、打开IDEA工具
+### :three:、打开IDEA工具
 
 - `创建一个新的java工程``导入Spring5的jar包``spring5 的模块`![](https://i.loli.net/2021/01/05/oTUekN5F1wRSuYj.png)`导入Beans、 Core 、Context、 Expression  还有额外的logging  jar包`
 - ![](https://i.loli.net/2021/01/05/J3BuYdr7Q19pVnv.png)
@@ -37,7 +37,7 @@
 
 ![](https://i.loli.net/2021/01/05/P1a2iplHNfLIC7x.png)
 
-### 4、创建普通类，在这个类创建普通方法
+### :four:、创建普通类，在这个类创建普通方法
 
 ```java
 package com.atgui.spring5;
@@ -53,7 +53,7 @@ public class User {
 
 
 
-### 5、创建Spring配置文件，在配置文件配置创建的对象
+### :five:、创建Spring配置文件，在配置文件配置创建的对象
 
 - (1) Spring 配置文件使用xml格式   （配置文件.xml放在src文件夹下）
 
@@ -74,7 +74,7 @@ public class User {
 </beans>
 ```
 
-### 6、进行测试代码编写
+### :six:、进行测试代码编写
 
 ![](https://i.loli.net/2021/01/14/VlvGk7e2XMqNL1d.png)
 
@@ -129,7 +129,7 @@ public class User {
 >
 > ClassPathXmlApplicationContext：对应src下的路径
 
-### Bean管理XML方式（创建对象和set注入属性）
+#### Bean管理XML方式（创建对象和set注入属性）
 
 > `1、什么是Bean管理`
 >
@@ -603,12 +603,6 @@ public class User {
   - （1）、创建类，定义数组，list，map，set类型属性,生成对应的set方法
 
     ```java
-    package com.atguigu.spring.collectiontype;
-    
-    import java.util.List;
-    import java.util.Map;
-    import java.util.Set;
-    
     public class stu {
     //    1、数组类型属性
         private String[] classes;
@@ -637,18 +631,826 @@ public class User {
     }
     
     ```
-
+    
   - （2）、在spring配置文件中进行配置
+  
+    ```java
+    <?xml version="1.0" encoding="UTF-8"?>
+    <beans xmlns="http://www.springframework.org/schema/beans"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+      <bean id="stu" class="com.atguigu.spring.Stu.Stu">
+    <!--数组类型的注入-->
+          <property name="classes">
+                <array>
+                    <value>java课程教学</value>
+                    <value>数据库课程</value>
+                </array>
+            </property>
+    <!--list 类型注入-->
+            <property name="list">
+                <list>
+                    <value>张三</value>
+                    <value>李四</value>
+                </list>
+            </property>
+    <!--  map类型注入      -->
+            <property name="maps">
+                <map>
+                    <entry key="Java" value="java"></entry>
+                    <entry key="PHP" value="php"></entry>
+                </map>
+            </property>
+    <!--set类型注入-->
+            <property name="sets">
+                <set>
+                    <value>Mysql</value>
+                    <value>PHP</value>
+                </set>
+            </property>
+        </bean>
+    
+    </beans>
+    ```
+  
+    
+  
+  - （3）、测试类
+  
+    ```java
+    public class TestSpring {
+        @Test
+        public void TestCollection(){
+            ApplicationContext ac=new ClassPathXmlApplicationContext("bean1.xml");
+            Stu stu=ac.getBean("stu",Stu.class);
+            stu.test();
+        }
+    }
+    ```
+  
+    
+  
+-  `细节问题`
 
-  - 
+   -  1、在集合之中设置对象类型值
+   -  （1）、对上面的Stu类添加一个list，里面存的是对象类型
 
-  - 
+   ```java
+   package com.atguigu.spring.Stu;
+   
+   import java.util.Arrays;
+   import java.util.List;
+   import java.util.Map;
+   import java.util.Set;
+   
+   public class Stu {
+   // 新添加的
+       private List<Course> courseList;
+   
+       public List<Course> getCourseList() {
+           return courseList;
+       }
+   
+       public void setCourseList(List<Course> courseList) {
+           this.courseList = courseList;
+       }
+   
+       public void  test(){
+           System.out.println(courseList);
+       }
+   }
+   
+   ```
+
+   - （2）、创建一个Course类
+
+     ```java
+     package com.atguigu.spring.Stu;
+     
+     public class Course {
+         private String cname;
+     
+         public String getCname() {
+             return cname;
+         }
+     
+         public void setCname(String cname) {
+             this.cname = cname;
+         }
+     
+         @Override
+         public String toString() {
+             return "Course{" +
+                     "cname='" + cname + '\'' +
+                     '}';
+         }
+     }
+     
+     ```
+
+     
+
+   -  （3）、xml文件设置
+
+      ```java
+      <?xml version="1.0" encoding="UTF-8"?>
+      <beans xmlns="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+          <bean id="stu" class="com.atguigu.spring.Stu.Stu">
+      <!--        注入list集合类型，值是一个对象-->
+              <property name="courseList">
+                  <list>
+                      <ref bean="course1"></ref>
+                      <ref bean="course2"></ref>
+                  </list>
+              </property>
+          </bean>
+      <!--创建多个course对象-->
+          <bean name="course1" class="com.atguigu.spring.Stu.Course">
+              <property name="cname" value="Spring5框架"></property>
+          </bean>
+          <bean name="course2" class="com.atguigu.spring.Stu.Course">
+              <property name="cname" value="java学习"></property>
+          </bean>
+      
+      </beans>
+      ```
+
+   -  （4）、测试类
+
+      ```java
+      package com.atguigu.spring.Testdemo;
+      
+      import com.atguigu.spring.Stu.Stu;
+      import org.junit.Test;
+      import org.springframework.context.ApplicationContext;
+      import org.springframework.context.support.ClassPathXmlApplicationContext;
+      
+      public class TestSpring {
+          @Test
+          public void TestCollection(){
+              ApplicationContext ac=new ClassPathXmlApplicationContext("bean1.xml");
+              Stu stu=ac.getBean("stu",Stu.class);
+              stu.test();
+      
+          }
+      }
+      
+      ```
+
+      
+
+   -  2、把集合注入部分提取出来
+
+      -  （1）、在spring配置文件中引入名称空间util
+
+         > ```
+         > <?xml version="1.0" encoding="UTF-8"?>
+         > <beans xmlns="http://www.springframework.org/schema/beans"
+         >        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         >        xmlns:p="http://www.springframework.org/schema/p"
+         >        xmlns:util="http://www.springframework.org/schema/util"
+         >        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+         >                             http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+         > 
+         > </beans>
+         > ```
+
+      -  （2）、使用util标签
+
+      ```java
+      <?xml version="1.0" encoding="UTF-8"?>
+      <beans xmlns="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:p="http://www.springframework.org/schema/p"
+             xmlns:util="http://www.springframework.org/schema/util"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+      
+      <!--    1、提取list集合类型属性注入-->
+          <util:list id="bookList">
+              <value>易筋经</value>
+              <value>九阳神功</value>
+          </util:list>
+      <!--    2、提取list集合类型属性注入使用-->
+          <bean id="book" class="com.atguigu.spring.collectionType.Book">
+              <property name="list" ref="bookList"></property>
+          </bean>
+      </beans>
+      ```
+
+      - 创建Book类
+
+      ```java
+      package com.atguigu.spring.collectionType;
+      import java.util.List;
+      
+      public class Book {
+          private List<String> list;
+      
+          public void setList(List<String> list) {
+              this.list = list;
+          }
+      
+          @Override
+          public String toString() {
+              return "Book{" +
+                      "list=" + list +
+                      '}';
+          }
+      }
+      
+      ```
+
+      
+
+      - 测试
+
+        ```java
+        package com.atguigu.spring.Testdemo;
+        
+        import com.atguigu.spring.collectionType.Book;
+        import com.atguigu.spring.collectionType.Stu;
+        import org.junit.Test;
+        import org.springframework.context.ApplicationContext;
+        import org.springframework.context.support.ClassPathXmlApplicationContext;
+        
+        public class TestSpring {
+            @Test
+            public void TestCollection(){
+                ApplicationContext ac=new ClassPathXmlApplicationContext("bean2.xml");
+                Book book=ac.getBean("book",Book.class);
+                System.out.println(book.toString());
+            }
+        }
+        
+        ```
+
+        
+
+#### IOC操作Bean管理（FactoryBean）
+
+  :one: Spring 有两种类型Bean 一种普通Bean,另外一种是工厂Bean（FactoryBean）
+
+> 普通Bean：在配置文件中定义Bean类型，返回什么类型
+>
+> 工厂Bean：在配置文件中定义什么类型，可以返回其他类型
+
+:two:  实现
+
+- 1、第一步 创建类，让这个类作为工厂Bean，实现接口FactoryBean
+
+- 2、第二步 实现接口里面的方法，在实现的方法中，定义返回的Bean类型
+
+```java
+package com.atguigu.spring.FactoryBean;
+
+import com.atguigu.spring.collectionType.Course;
+import org.springframework.beans.factory.FactoryBean;
+
+public class Mybean implements FactoryBean<Course> {
+//定义返回bean
+    @Override
+    public Course getObject() throws Exception {
+        Course course=new Course();
+        course.setCname("abc");
+        return course;
+    }
+
+    @Override
+    public Class<?> getObjectType() {
+        return null;
+    }
+
+    @Override
+    public boolean isSingleton() {
+        return false;
+    }
+}
+
+```
+
+- 配置文件
+
+```java
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean id="mybean" class="com.atguigu.spring.FactoryBean.Mybean"></bean>
+</beans>
+```
+
+- 测试类
+
+```java
+package com.atguigu.spring.Testdemo;
+
+import com.atguigu.spring.FactoryBean.Mybean;
+import com.atguigu.spring.collectionType.Book;
+import com.atguigu.spring.collectionType.Course;
+import org.junit.Test;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class TestSpring {
+    @Test
+    public void TestCollection(){
+        ApplicationContext ac=new ClassPathXmlApplicationContext("bean3.xml");
+        Course course=ac.getBean("mybean", Course.class);
+        System.out.println(course);
+    }
+}
+
+```
+
+
+
+#### IOC操作Bean管理(Bean作用域)
+
+:one: 在Spring里面，设置创建Bean实例是单实例还是多实例
+
+:two: 在Spring里面，默认情况下，bean是单实例对象，
+
+- (1)、创建Book类
+
+```java
+package com.atguigu.spring.collectionType;
+import java.util.List;
+
+public class Book {
+    private List<String> list;
+
+    public void setList(List<String> list) {
+        this.list = list;
+    }
+}
+```
+
+
+
+- (2)、设置xml配置文件
+
+```java
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean id="book" class="com.atguigu.spring.collectionType.Book">
+        <property name="list" >
+            <list>
+            <value>aaa</value>
+            <value>aaa1</value>
+            </list>
+        </property>
+    </bean>
+</beans>
+```
+
+
+
+- (3)、测试
+
+```java
+package com.atguigu.spring.Testdemo;
+
+import com.atguigu.spring.collectionType.Book;
+import org.junit.Test;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class TestSpring {
+    @Test
+    public void TestCollection(){
+        ApplicationContext ac=new ClassPathXmlApplicationContext("bean3.xml");
+        Book book1=ac.getBean("book", Book.class);
+        Book book2=ac.getBean("book", Book.class);
+        System.out.println(book1);
+        System.out.println(book2);
+    }
+}
+
+```
+
+- (4)、输出  单实例的输出地址是一样的
+
+  ![](https://i.loli.net/2021/03/08/IAnPbC8NpslwSV4.png)
+
+
+
+:three: 如何设置单实例还是多实例
+
+> 在spring配置文件bean标签里面有属性(`scope`)用于设置单实例还是多实例
+
+- scope属性值
+
+  - 第一个值，默认值 `singleton` 表示是单实例对象
+  - 第二个值，`protetype`表示的是多实例对象
+
+- 测试
+
+  - 修改xml配置文件
+
+  ```java
+  <?xml version="1.0" encoding="UTF-8"?>
+  <beans xmlns="http://www.springframework.org/schema/beans"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+      <bean id="book" class="com.atguigu.spring.collectionType.Book" scope="prototype">
+          <property name="list" >
+              <list>
+              <value>aaa</value>
+              <value>aaa1</value>
+              </list>
+          </property>
+      </bean>
+  </beans>
+  ```
+
+  
+
+  - 结果
+  - ![](https://i.loli.net/2021/03/08/VsC3gSZxzYDAWBy.png)
+
+- singleton和prototype的区别
+
+> 第一：singleton 单实例，prototype 多实例
+>
+> 第二：设置scope值是singleton的时候，加载spring配置文件的时候，即` ApplicationContext ac=new ClassPathXmlApplicationContext("xxx.xml");` 的时候就创建单实例对象
+>
+> ​          设置scope值是prototype的时候，不是在加载spring配置文件的时候创建对象，而是在调用getBean方法的时候创建多实例对象
+
+
+
+#### IOC操作Bean管理(Bean生命周期)
+
+> 生命周期：从对象创建到对象销毁的过程
+
+- Bean的声明周期
+  - (1)、通过构造器创建bean实例(无参数构造)
+  - (2)、为bean的属性设置值和对其他bean引用(调用set方法)
+  - (3)、调用bean的初始化的方法（需要进行配置）
+  - (4)、bean可以使用了(对象获取到了)
+  - (5)、当容器关闭的时候，调用bean的销毁的方法(需要进行配置销毁的方法)
+- Bean的生命周期(加上后置处理器)
+  - (1)、通过构造器创建bean实例(无参数构造)
+  - (2)、为bean的属性设置值和对其他bean引用(调用set方法)
+  - <font color="red">(3)、把bean实例传递bean后置处理器的方法</font>(postProcessBeforeInitialization)
+  - (4)、调用bean的初始化的方法（需要进行配置）
+  - <font color="red">(5)、把bean实例传递bean后置处理器的方法</font>(postProcessAfterInitialization)
+  - (6)、bean可以使用了(对象获取到了)
+  - (7)、当容器关闭的时候，调用bean的销毁的方法(需要进行配置销毁的方法)
+
+`演示bean 的声明周期`
+
+（1）、Orders类
+
+```java
+package com.atguigu.spring.Bean;
+
+public class Orders {
+//    无参数构造
+    public Orders() {
+        System.out.println("第一步：执行无参数构造创建bean实例");
+    }
+    private String oname;
+    public void setOname(String oname) {
+        this.oname = oname;
+        System.out.println("第二步：调用set方法 设置属性值");
+    }
+//    创建执行的初始化方法
+ public void initMethod(){
+     System.out.println("第三步：执行初始化的方法");
+ }
+//     创建执行销毁的方法
+    public void destoryMethod(){
+        System.out.println("第五步：销毁的方法");
+    }
+}
+
+```
+
+（2）、配置文件
+
+```java
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean id="orders" class="com.atguigu.spring.Bean.Orders" init-method="initMethod" destroy-method="destoryMethod"> <!-- 初始化方法和销毁方法-->
+        <property name="oname" value="手机">
+        </property>
+    </bean>
+
+</beans>
+```
+
+
+
+（3）、测试方法
+
+```java
+ @Test
+    public void TestBean1(){
+
+        ClassPathXmlApplicationContext ac=new ClassPathXmlApplicationContext("bean4.xml");
+        Orders orders=ac.getBean("orders", Orders.class);
+        System.out.println("第四步：获取创建bean实例对象");
+        System.out.println(orders);
+//        手动让bean实例销毁
+        ac.close();//需要将 ApplicationContext改为ClassPathXmlApplicationContext
+    }
+```
+
+
+
+（4）、结果
+
+![](https://i.loli.net/2021/03/08/ROSqlPfXbsGuaEN.png)
+
+
+
+`演示带有后置处理器方法的bean生命周期`
+
+(1)、创建类，实现接口BeanPostProcessor，创建后置处理器
+
+```java
+package com.atguigu.spring.Bean;
+
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.lang.Nullable;
+
+public class MyBeanPost  implements BeanPostProcessor {
+    @Override
+    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+        System.out.println("在我们的初始化之前执行的方法");
+        return bean;
+    }
+
+    @Override
+   public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+        System.out.println("在初始化之后执行的方法");
+        return bean;
+    }
+}
+
+```
+
+
+
+(2)、配置文件
+
+```java
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean id="orders" class="com.atguigu.spring.Bean.Orders" init-method="initMethod" destroy-method="destoryMethod"> <!-- 初始化方法和销毁方法-->
+        <property name="oname" value="手机">
+        </property>
+    </bean>
+<!--配置后置处理器   配置文件中的每一个bean都会有配置处理器 此时你看到的配置文件样子中 有两个bean，表示会创建两个后置处理器-->
+    <bean id="mybeanpost" class="com.atguigu.spring.Bean.MyBeanPost"></bean>
+</beans>
+```
+
+(3)、实现BeanPostProcessor接口
+
+```java
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
+package org.springframework.beans.factory.config;
+
+import org.springframework.beans.BeansException;
+import org.springframework.lang.Nullable;
+
+public interface BeanPostProcessor {
+    @Nullable
+    default Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+        return bean;
+    }
+
+    @Nullable
+    default Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+        return bean;
+    }
+}
+
+```
+
+
+
+(4)、测试
+
+```java
+    @Test
+    public void TestBean1(){
+
+        ClassPathXmlApplicationContext ac=new ClassPathXmlApplicationContext("bean4.xml");
+        Orders orders=ac.getBean("orders", Orders.class);// 这里用的是orders 根据上面配置文件的描述 也会显示
+        System.out.println("第四步：获取创建bean实例对象");
+        System.out.println(orders);
+//        手动让bean实例销毁
+        ac.close();//需要将 ApplicationContext改为ClassPathXmlApplicationContext
+    }
+```
+
+(5)、结果
+
+![](https://i.loli.net/2021/03/09/l237hpAnDr9ktVT.png)
 
 
 
 
 
+#### IOC操作 Bean管理(xml自动装配)
+
+> 什么是自动装配？
+>
+> ​	答：根据指定装配规则（属性名称或者属性类型），spring自动将匹配的属性值进行注入。
+
+`演示自动装配`
+
+- 根据名称自动装配
+
+- (1)、Emp类
+
+  - ```java
+    package com.atguigu.spring.autowrite;
+    
+    public class Emp {
+       private Dept dept;
+    
+        public void setDept(Dept dept) {
+            this.dept = dept;
+        }
+    
+        @Override
+        public String toString() {
+            return "Emp{" +
+                    "dept=" + dept +
+                    '}';
+        }
+    
+        public void test(){
+            System.out.println(dept);
+        }
+    }
+    
+    ```
+
+  - (2)、Dept类
+
+  - ```java
+    package com.atguigu.spring.autowrite;
+    
+    public class Dept {
+        @Override
+        public String toString() {
+            return "Dept{}";
+        }
+    }
+    
+    ```
+
+  - (3)、配置文件
+
+  - ```java
+    <?xml version="1.0" encoding="UTF-8"?>
+    <beans xmlns="http://www.springframework.org/schema/beans"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!--   实现自动装配
+            bean标签属性autowire 配置自动装配
+            autowire 属性常用两个值
+            byName 根据属性名称注入，注入值bean的id和类属性名称一样
+            byType 根据属性类型注入
+        -->
+         <bean id="emp" class="com.atguigu.spring.autowrite.Emp" autowire="byName">
+    <!--      这个是以前写的手动装配的方式   <property name="dept" ref="dept"></property>-->
+         </bean>
+    
+         <bean id="dept" class="com.atguigu.spring.autowrite.Dept"></bean>
+    </beans>
+    ```
+
+  - (4)、测试类
+
+  - ```java
+      @Test
+        public void TestAutowrite1(){
+    
+            ClassPathXmlApplicationContext ac=new ClassPathXmlApplicationContext("bean5.xml");
+            Emp emp=ac.getBean("emp", Emp.class);
+            System.out.println(emp);
+         }
+    ```
+
+  - (5)、结果
+
+  - ![](https://i.loli.net/2021/03/09/zstqfEw6pI7GDNe.png)
+
+- 根据类型进行注入
+
+  - (1)、将autowire属性值改为byType
+
+  - ```java
+         <bean id="emp" class="com.atguigu.spring.autowrite.Emp" autowire="byType">
+    <!--      这个是以前写的手动装配的方式   <property name="dept" ref="dept"></property>-->
+         </bean>
+    
+         <bean id="dept" class="com.atguigu.spring.autowrite.Dept"></bean>
+    ```
+
+  - (2)、结果
+
+  - ![](https://i.loli.net/2021/03/09/jobmvNAyhqu5cpe.png)
 
 
 
 
+
+#### IOC操作Bean管理（外部属性文件）
+
+1、直接配置数据库信息
+
+（1）、配置德鲁伊连接池
+
+（2）、引入德鲁伊连接池依赖jar包
+
+> jar包链接：https://pan.baidu.com/s/1Md6pEWwmVPgL4YMRZxXC8w 
+> 提取码：3jf8 
+
+- 手动配置文件
+
+- ```java
+  <?xml version="1.0" encoding="UTF-8"?>
+  <beans xmlns="http://www.springframework.org/schema/beans"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+  <!--直接配置连接池-->
+  
+            <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
+                  destroy-method="close">
+                 <property name="url" value="jdbc:mysql://localhost:3306/userDb" />
+                 <property name="username" value="root" />
+                 <property name="password" value="root" />
+                 <property name="driverClassName" value="com.mysql.jdbc.Driver" />
+            </bean>
+  </beans>
+  ```
+
+  
+
+
+
+2、通过引入外部属性文件配置数据库连接池
+
+（1）、创建外部属性文件，properties格式文件，写数据库信息
+
+![](https://i.loli.net/2021/03/09/YnLyKcx9eaOhZRD.png)
+
+（2）、把外部properties属性文件引入到spring配置文件中
+
+- 引入context名称空间
+
+```java
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+```
+
+- 在spring配置文件使用标签引入外部属性文件
+
+- ```java
+  <?xml version="1.0" encoding="UTF-8"?>
+  <beans xmlns="http://www.springframework.org/schema/beans"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns:context="http://www.springframework.org/schema/context"
+         xmlns:util="http://www.springframework.org/schema/util"
+         xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                              http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+                              http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+  <!--     引入外部属性文件-->
+       <context:property-placeholder location="classpath:jdbc.properties"></context:property-placeholder>
+  <!--               配置连接池-->
+       <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"destroy-method="close">
+                      <property name="url" value="${prop.url}" /> 
+                      <property name="username" value="${prop.useName}" />
+                      <property name="password" value="${prop.password}" />
+                      <property name="driverClassName" value="${prop.driverClassName}" />
+                 </bean>
+  </beans>
+  ```
+
+- 
