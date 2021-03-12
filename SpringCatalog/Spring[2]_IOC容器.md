@@ -1,85 +1,3 @@
-# 一、Spring5 入门
-
-## 1、Spring框架
-
-- :one: Spring  是一个轻量级的开源的JavaEE框架
-- :two: Spring 可以解决企业应用开发的复杂性
-- :three: Spring 有很多组成部分 两个核心部分：IOC AOP
-  - IOC  :`控制反转，把创建对象的过程交给spring进行`
-  - AOP :`面向切面，不修改源代码进行功能增强`
-- :four: Spring特点
-  - `方便解耦，简化开发`
-  - `AOP编程的支持` 
-  - `方便程序的测试`
-  - `方便集成各种优秀框架`
-  - `降低API开发难度`
-
-## 2、入门案例
-
-### :one:、下载Spring5最新稳定版本  `GA表示稳定版`  	`SNAPSHOT表示测试版`
-
-![](https://i.loli.net/2021/01/05/ycj25gvUlLhFW9J.png)
-
-### :two:、[下载地址](https://repo.spring.io/release/org/springframework/spring/)
-
-- `找到最新的RELEASE下载  xxxxRELEASE-dist.zip解压就可以了`
-- ![](https://i.loli.net/2021/01/05/UOyb3H5Y72w6eqn.png)
-
-### :three:、打开IDEA工具
-
-- `创建一个新的java工程``导入Spring5的jar包``spring5 的模块`![](https://i.loli.net/2021/01/05/oTUekN5F1wRSuYj.png)`导入Beans、 Core 、Context、 Expression  还有额外的logging  jar包`
-- ![](https://i.loli.net/2021/01/05/J3BuYdr7Q19pVnv.png)
-- 在idea 中的 project Structure 中导入包
-
-![](https://i.loli.net/2021/01/05/gVaFb67szKuhfPi.png)
-
-
-
-![](https://i.loli.net/2021/01/05/P1a2iplHNfLIC7x.png)
-
-### :four:、创建普通类，在这个类创建普通方法
-
-```java
-package com.atgui.spring5;
-
-public class User {
-    public void add(){
-        System.out.println("add method");
-    }
-
-}
-
-```
-
-
-
-### :five:、创建Spring配置文件，在配置文件配置创建的对象
-
-- (1) Spring 配置文件使用xml格式   （配置文件.xml放在src文件夹下）
-
-![](https://i.loli.net/2021/01/14/wb4iH5npx7sqNGk.png)
-
-![](https://i.loli.net/2021/01/14/1bl27efSgPFpxmo.png)
-
-
-
-```java
-<?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-< !--配置user对象创建-->
-    <bean id="user" class="com.atguigu.spring.User"></bean>
-    <!--id 是起名字 以后会用    class就是全限定类名-->
-</beans>
-```
-
-### :six:、进行测试代码编写
-
-![](https://i.loli.net/2021/01/14/VlvGk7e2XMqNL1d.png)
-
-
-
 ## 3、IOC容器
 
 - （1）、IOC底层原理
@@ -170,10 +88,16 @@ public class User {
 
 - 2、基于xml方式注入属性
 
+- > 提供带所有参数的有参构造方法
+
   - （1）DI：依赖注入，就是注入属性（`DI是IOC中的一种具体实现，就是表还是注入属性，但是注入属性要在创建对象的基础之上进行`)
   - 
 
 - 3、第一种注入方式：使用set方法进行注入
+
+- > 1、提供默认空参构造方法
+  >
+  > 2、为所有属性提供setter方法
 
   - (1)、创建一个类，定义属性和对应的set方法
 
@@ -181,7 +105,9 @@ public class User {
     public class Book {
         private String bname;
         private String bauthor;
-    
+       public Book(){
+         
+       }
         public void setBname(String bname) {
             this.bname = bname;
         }
@@ -231,7 +157,7 @@ public class User {
 
     
 
-- 4、第二种注入方式：使用有参数构造进行注入
+- 4、第二种注入方式：使用有参数构造进行注入(xml注入)
 
   - （1)、创建一个类，定义属性和有参构造
 
@@ -310,6 +236,80 @@ public class User {
     //        com.atguigu.spring.Book@13eb8acf
     //        九阳神功::无名氏
     ```
+
+#### IOC操作Bean管理（SPEL）
+
+> 
+
+:one: 实现
+
+- 第一步、 创建Message类
+
+```java
+package com.company.class2.Spel;
+
+public class Message {
+    private  String message;
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    @Override
+    public String toString() {
+        return "Message{" +
+                "message='" + message + '\'' +
+                '}';
+    }
+}
+
+```
+
+
+
+- 第二步、配置文件
+
+```java
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+<bean id="message" class="com.company.class2.Spel.Message">
+       <property name="message" value="#{systemProperties['user.name']}" />
+</bean>
+</beans>
+```
+
+
+
+- 第三步、测试
+
+```java
+package com.company.class2.Spel;
+
+import org.junit.Test;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class TestSpel {
+    @Test
+    public void Test(){
+        ApplicationContext ac=new ClassPathXmlApplicationContext("beans7.xml");
+        System.out.println(ac.getBean("message"));
+    }
+}
+
+```
+
+
+
+- 结果
+
+![](https://i.loli.net/2021/03/11/LyJ32Pm5ivxUo4G.png)
 
 #### IOC操作Bean管理（xml注入其他属性类型）
 
@@ -887,7 +887,126 @@ public class User {
         
         ```
 
-        
+
+
+
+
+
+#### IOC操作Bean管理（构造器）
+
+:one: 实现：
+
+- 第一步、创建类
+
+```java
+package com.company.class2.constructor;
+
+public class Bean1 {
+}
+
+```
+
+
+
+- 第二步、配置文件
+
+```java
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean id="BeanId" class="com.company.class2.constructor.Bean1"> </bean>
+</beans>
+```
+
+
+
+- 第三步、Test
+
+```java
+package com.company.class2.constructor;
+
+import org.junit.Test;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class TestMethod {
+    @Test
+    public void Test1(){
+        ApplicationContext ac=new ClassPathXmlApplicationContext("bean2.xml");
+        Bean1 bean1=ac.getBean("BeanId",Bean1.class);
+        System.out.println(bean1);
+    }
+}
+
+```
+
+
+
+#### IOC 操作Bean管理（静态工厂）
+
+> 使用静态工厂是实例化Bean的另一种方式，该方式要求开发者创建一个静态工厂的方法来创建Bean的实例，其Bean的配置中的class属性所制定的不再是Bean的实现类，而是静态工厂类，同时还需要使用`factory-method` 属性来制定所创建的静态工厂方法。
+
+:one: 实现
+
+- 第一步、创建Bean2类，不需要写方法
+
+```java
+package com.company.class2.StaticFactory;
+
+public class Bean2 {
+}
+
+```
+
+- 第二步、创建工厂类，并在其中创建一个静态方法返回Bean2实例
+
+```java
+package com.company.class2.StaticFactory;
+
+public class Mybean2Factory {
+    public static Bean2 creatBean(){
+        return new Bean2();
+    }
+}
+
+```
+
+- 第三步、创建配置文件并注入
+
+```java
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+<bean id="bean2" class="com.company.class2.StaticFactory.Mybean2Factory" factory-method="creatBean">
+</bean>
+</beans>
+```
+
+
+
+- 第四步、测试
+
+```java
+package com.company.class2.StaticFactory;
+
+import org.junit.Test;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class TestFatoryBean {
+    @Test
+    public void TestBean(){
+        ApplicationContext ac=new ClassPathXmlApplicationContext("beans2.xml");
+        System.out.println(ac.getBean("bean2"));
+    }
+}
+
+```
+
+![](https://i.loli.net/2021/03/11/wzhui2UpL8Ig7oc.png)
 
 #### IOC操作Bean管理（FactoryBean）
 
@@ -1081,7 +1200,9 @@ public class TestSpring {
 >
 > ​          设置scope值是prototype的时候，不是在加载spring配置文件的时候创建对象，而是在调用getBean方法的时候创建多实例对象
 
+![](https://i.loli.net/2021/03/11/QtP1eSzrNIuyGDB.png)
 
+![](https://i.loli.net/2021/03/11/MxFTZBf5vKGLEbt.png)
 
 #### IOC操作Bean管理(Bean生命周期)
 
@@ -1101,6 +1222,8 @@ public class TestSpring {
   - <font color="red">(5)、把bean实例传递bean后置处理器的方法</font>(postProcessAfterInitialization)
   - (6)、bean可以使用了(对象获取到了)
   - (7)、当容器关闭的时候，调用bean的销毁的方法(需要进行配置销毁的方法)
+
+![](https://i.loli.net/2021/03/12/nmAfLVjZKN7CdRx.png)
 
 `演示bean 的声明周期`
 
@@ -1344,7 +1467,7 @@ public interface BeanPostProcessor {
   - ```java
       @Test
         public void TestAutowrite1(){
-    
+      
             ClassPathXmlApplicationContext ac=new ClassPathXmlApplicationContext("bean5.xml");
             Emp emp=ac.getBean("emp", Emp.class);
             System.out.println(emp);
@@ -1453,4 +1576,4 @@ public interface BeanPostProcessor {
   </beans>
   ```
 
-- 
+
