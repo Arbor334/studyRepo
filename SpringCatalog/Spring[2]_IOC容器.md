@@ -1565,7 +1565,7 @@ public interface BeanPostProcessor {
                               http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
                               http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
   <!--     引入外部属性文件-->
-       <context:property-placeholder location="classpath:jdbc.properties"></context:property-placeholder>
+       <context:property-placeholder location="jdbc.properties"></context:property-placeholder>
   <!--               配置连接池-->
        <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"destroy-method="close">
                       <property name="url" value="${prop.url}" /> 
