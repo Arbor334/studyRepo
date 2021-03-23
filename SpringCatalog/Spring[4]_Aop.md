@@ -289,7 +289,7 @@ public class User
 
 ```java
 <!--开启Aspect生成代理对象-->
-    <aop:aspectj-autoproxy></aop:aspectj-autoproxy
+    <aop:aspectj-autoproxy></aop:aspectj-autoproxy>
 ```
 
 
